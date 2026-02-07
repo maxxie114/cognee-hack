@@ -18,10 +18,10 @@
 
 set -e
 
-WORK_DIR="${HOME}/hackathon"
+WORK_DIR="${HOME}"
 MODELS_DIR="${WORK_DIR}/models"
 EXPORT_DIR="${WORK_DIR}/cognee_export"
-PROJECT_DIR="${WORK_DIR}/ai-memory-hackathon"
+PROJECT_DIR="${WORK_DIR}/cognee-hack"
 
 echo "============================================"
 echo "  DO GPU Droplet Setup"

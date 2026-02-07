@@ -1,0 +1,25 @@
+PATIENT SUMMARY
+
+Patient name: Sarah Williams
+Date of birth: 1990-11-05
+Patient ID: PT-1003
+Last visit: 2025-01-28
+
+Current conditions:
+- Hypothyroidism (post-thyroiditis), on levothyroxine
+- Vitamin D deficiency, on supplementation
+- Anxiety (generalized), managed with therapy; no current psychotropic medication
+
+Current medications:
+- Levothyroxine 75 mcg, once daily on empty stomach
+- Vitamin D3 2000 IU, once daily
+- No daily psychiatric medications; occasional melatonin for sleep
+
+Allergies: Latex. No known drug allergies.
+
+Recent notes (Jan 2025):
+- TSH 2.1 mIU/L, free T4 normal. Dose unchanged.
+- Vitamin D level now in range; continue 2000 IU maintenance.
+- Patient declined medication for anxiety; continuing with CBT. Next check-in in 2 months.
+
+Emergency contact: Tom Williams (spouse), 555-0103.

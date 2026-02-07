@@ -1,0 +1,25 @@
+PATIENT SUMMARY
+
+Patient name: Maria Santos
+Date of birth: 1985-03-22
+Patient ID: PT-1001
+Last visit: 2025-01-15
+
+Current conditions:
+- Type 2 diabetes (diagnosed 2020), well controlled with diet and metformin
+- Mild hypertension, managed with lisinopril 10 mg once daily
+- Seasonal allergies (spring/fall)
+
+Current medications:
+- Metformin 500 mg, twice daily with meals
+- Lisinopril 10 mg, once daily in the morning
+- Cetirizine 10 mg as needed for allergies
+
+Allergies: Penicillin (rash). No known food allergies.
+
+Recent notes (Jan 2025):
+- HbA1c 6.2%, within target. Continue current regimen.
+- BP 128/82 at last check. Advised low-sodium diet; next follow-up in 3 months.
+- Patient asked about flu vaccine; advised to get it at pharmacy.
+
+Emergency contact: Carlos Santos (spouse), 555-0101.

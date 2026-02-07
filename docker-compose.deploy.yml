@@ -1,0 +1,71 @@
+# ── Cognee Hackathon Deployment ──────────────────────────
+# Deploys on a DO GPU droplet (or any Docker host with NVIDIA GPU).
+#
+# Services:
+#   ollama       – Ollama with GPU, hosts LLM + embedding models
+#   ollama-init  – One-shot: registers GGUF models with Ollama
+#   app          – Cognee Q&A + Streamlit UI (port 8501)
+#
+# Usage:
+#   cp .env.example .env   # fill in your Qdrant Cloud creds
+#   docker compose up --build -d
+#   # Streamlit UI → http://<host>:8501
+#
+# Models (~2.7GB total) are mounted from ./models/ into ollama.
+# The cognee_export/ data (~graph DB) is baked into the app image.
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: cognee-ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+      - ./models:/models:ro
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:11434/api/tags || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 15s
+
+  ollama-init:
+    image: curlimages/curl:latest
+    container_name: cognee-ollama-init
+    depends_on:
+      ollama:
+        condition: service_healthy
+    volumes:
+      - ./models:/models:ro
+      - ./scripts/register-models.sh:/register-models.sh:ro
+    entrypoint: ["/bin/sh", "/register-models.sh"]
+    restart: "no"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    container_name: cognee-app
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+      LLM_ENDPOINT: http://ollama:11434/v1
+      EMBEDDING_ENDPOINT: http://ollama:11434/api/embed
+    ports:
+      - "8501:8501"
+    depends_on:
+      ollama-init:
+        condition: service_completed_successfully
+
+volumes:
+  ollama_data:

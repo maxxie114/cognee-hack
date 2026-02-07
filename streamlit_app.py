@@ -1,71 +1,20 @@
 import os
-import asyncio
-import resource
-import pathlib
-import threading
-import concurrent.futures
-from dotenv import load_dotenv
-
-# Load Qdrant credentials
-load_dotenv()
-os.environ["VECTOR_DB_PROVIDER"] = "qdrant"
-os.environ.setdefault("VECTOR_DB_URL", os.getenv("QDRANT_URL", ""))
-os.environ.setdefault("VECTOR_DB_KEY", os.getenv("QDRANT_API_KEY", ""))
-
-# Ollama host: use OLLAMA_HOST env var if set (e.g. http://ollama:11434 in Docker)
-_ollama_host = os.getenv("OLLAMA_HOST", "http://localhost:11434")
-
-os.environ.setdefault("LLM_API_KEY", ".")
-os.environ.setdefault("LLM_PROVIDER", "ollama")
-os.environ.setdefault("LLM_MODEL", "cognee-distillabs-model-gguf-quantized")
-os.environ.setdefault("LLM_ENDPOINT", f"{_ollama_host}/v1")
-os.environ.setdefault("LLM_MAX_TOKENS", "16384")
-
-os.environ.setdefault("EMBEDDING_PROVIDER", "ollama")
-os.environ.setdefault("EMBEDDING_MODEL", "nomic-embed-text:latest")
-os.environ.setdefault("EMBEDDING_ENDPOINT", f"{_ollama_host}/api/embed")
-os.environ.setdefault("EMBEDDING_DIMENSIONS", "768")
-os.environ.setdefault("HUGGINGFACE_TOKENIZER", "nomic-ai/nomic-embed-text-v1.5")
-
-# Register Qdrant adapter BEFORE importing cognee
-import cognee_community_vector_adapter_qdrant.register  # noqa: F401
-
+import requests
 import streamlit as st
-from custom_retriever import GraphCompletionRetrieverWithUserPrompt
 
-# Bump file descriptor limit
-soft, hard = resource.getrlimit(resource.RLIMIT_NOFILE)
-resource.setrlimit(resource.RLIMIT_NOFILE, (min(10000, hard), hard))
+# API backend URL (FastAPI running on same container or host)
+API_URL = os.getenv("COGNEE_API_URL", "http://localhost:8000")
 
 
-@st.cache_resource
-def get_retriever():
-    system_prompt_path = str(
-        pathlib.Path(
-            os.path.join(pathlib.Path(__file__).parent, "prompts/system_prompt.txt")
-        ).resolve()
+def run_query(query: str) -> str:
+    """Call the FastAPI /query endpoint."""
+    resp = requests.post(
+        f"{API_URL}/query",
+        json={"question": query},
+        timeout=300,
     )
-    return GraphCompletionRetrieverWithUserPrompt(
-        user_prompt_filename="user_prompt.txt",
-        system_prompt_path=system_prompt_path,
-        top_k=10,
-    )
-
-
-def run_query(retriever, query: str) -> str:
-    """Run async cognee query in a separate thread to avoid event loop conflicts."""
-    def _run():
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        try:
-            return loop.run_until_complete(retriever.get_completion(query=query))
-        finally:
-            loop.close()
-
-    with concurrent.futures.ThreadPoolExecutor() as executor:
-        future = executor.submit(_run)
-        result = future.result(timeout=300)
-    return result[0]
+    resp.raise_for_status()
+    return resp.json()["answer"]
 
 
 # --- UI ---
@@ -115,8 +64,7 @@ if query:
     with st.chat_message("assistant"):
         with st.spinner("Searching knowledge graph... (this may take ~60s)"):
             try:
-                retriever = get_retriever()
-                answer = run_query(retriever, query)
+                answer = run_query(query)
             except Exception as e:
                 answer = f"Error: {e}"
         st.markdown(answer)

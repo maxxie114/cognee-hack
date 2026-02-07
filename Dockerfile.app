@@ -19,12 +19,15 @@ RUN uv pip install --system \
     "python-dotenv" \
     "requests>=2.31" \
     "boto3>=1.35" \
-    "streamlit>=1.30"
+    "streamlit>=1.30" \
+    "fastapi>=0.110" \
+    "uvicorn[standard]>=0.27"
 
 # ── Copy project code ──
 COPY custom_retriever.py custom_generate_completion.py ./
 COPY solution_q_and_a.py ./
 COPY streamlit_app.py ./
+COPY api.py ./
 COPY helper_functions/ ./helper_functions/
 COPY prompts/ ./prompts/
 COPY shared/ ./shared/
@@ -39,6 +42,6 @@ COPY setup.py ./
 COPY scripts/docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
-EXPOSE 8501
+EXPOSE 8501 8000
 
 ENTRYPOINT ["/docker-entrypoint.sh"]

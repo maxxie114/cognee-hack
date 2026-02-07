@@ -180,6 +180,7 @@ docker run -d \
   --name cognee-app \
   --restart unless-stopped \
   -p 8501:8501 \
+  -p 8000:8000 \
   --env-file .env \
   -e "OLLAMA_HOST=http://${OLLAMA_HOST_IP}:11434" \
   -e "LLM_ENDPOINT=http://${OLLAMA_HOST_IP}:11434/v1" \
@@ -204,6 +205,7 @@ echo "============================================"
 echo ""
 DROPLET_IP=$(curl -sf http://169.254.169.254/metadata/v1/interfaces/public/0/ipv4/address 2>/dev/null || hostname -I | awk '{print $1}')
 echo "  Ollama API:  http://${DROPLET_IP}:11434"
+echo "  Cognee API:  http://${DROPLET_IP}:8000"
 echo "  Streamlit:   http://${DROPLET_IP}:8501"
 echo ""
 echo "  Share with teammates:"
@@ -220,6 +222,10 @@ echo "    curl http://${DROPLET_IP}:11434/api/chat -d '{\"model\":\"cognee-disti
 echo ""
 echo "  Streamlit Q&A UI:"
 echo "    http://${DROPLET_IP}:8501"
+echo ""
+echo "  Cognee REST API:"
+echo "    POST http://${DROPLET_IP}:8000/query -d '{\"question\":\"your question\"}'"
+echo "    GET  http://${DROPLET_IP}:8000/health"
 echo ""
 echo "  Logs:"
 echo "    docker logs -f ollama"

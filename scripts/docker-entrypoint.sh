@@ -42,6 +42,9 @@ else
   echo "Cognee data already imported."
 fi
 
+echo "Starting FastAPI on port 8000..."
+uvicorn api:app --host 0.0.0.0 --port 8000 &
+
 echo "Starting Streamlit on port 8501..."
 exec streamlit run streamlit_app.py \
   --server.port=8501 \

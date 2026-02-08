@@ -1,0 +1,55 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "clinxplain"
+version = "0.1.0"
+description = "RAG pipeline, agentic RAG, and self-evolving supervisor for medical Q&A"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "marimo>=0.19.7",
+    # RAG pipeline
+    "qdrant-client>=1.7.0",
+    "langchain>=0.3.0",
+    "langchain-community>=0.3.0",
+    "langgraph>=0.2.0",
+    "langchain-openai>=0.2.0",
+    "pypdf>=5.0.0",
+    "python-dotenv>=1.0.0",
+    "numpy>=1.26.0",
+    # Agent / notebook
+    "pydantic>=2.0.0",
+    "weave>=0.0.1",
+    "matplotlib>=3.8.0",
+    "ipykernel>=7.1.0",
+    # API
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "python-multipart>=0.0.9",
+    # Health check app (API + WebSocket client tests)
+    "streamlit>=1.40.0",
+    "httpx>=0.27.0",
+    "websockets>=14.0",
+    "langchain-qdrant>=1.1.0",
+    "langgraph-cli[inmem]>=0.1.0",
+]
+
+[project.optional-dependencies]
+ragas = [
+    "ragas>=0.2.0",
+]
+cognee = [
+    "cognee",
+    "cognee-community-vector-adapter-qdrant",
+]
+
+[project.scripts]
+rag = "clinxplain.cli.rag:main"
+supervisor = "clinxplain.cli.supervisor:main"
+api = "clinxplain.cli.api:main"
+
+[tool.hatch.build.targets.wheel]
+# src layout: package lives in src/clinxplain
+packages = ["src/clinxplain"]

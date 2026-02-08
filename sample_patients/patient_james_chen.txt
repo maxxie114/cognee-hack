@@ -1,0 +1,25 @@
+PATIENT SUMMARY
+
+Patient name: James Chen
+Date of birth: 1972-08-14
+Patient ID: PT-1002
+Last visit: 2025-02-01
+
+Current conditions:
+- Asthma (moderate, persistent). Uses maintenance inhaler daily.
+- GERD (gastroesophageal reflux), on PPI
+- History of left knee arthroscopy (2023), no current joint complaints
+
+Current medications:
+- Fluticasone/salmeterol 250/50 mcg, one inhalation twice daily
+- Albuterol inhaler, two puffs as needed for shortness of breath
+- Omeprazole 20 mg, once daily before breakfast
+
+Allergies: Sulfa drugs (hives). Shellfish (mild).
+
+Recent notes (Feb 2025):
+- Asthma control good; no exacerbations in last 6 months. Peak flow improved.
+- GERD symptoms better on omeprazole. No need for dose change.
+- Reminded to refill rescue inhaler before travel.
+
+Emergency contact: Lisa Chen (spouse), 555-0102.

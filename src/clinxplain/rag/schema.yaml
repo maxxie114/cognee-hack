@@ -1,0 +1,5 @@
+# Qdrant collection schema for RAG documents
+# https://qdrant.tech/documentation/
+# Collection name: rag_docs (configurable via RAG_INDEX_NAME)
+# Vectors: size=1536 (text-embedding-3-small), distance=cosine
+# Payload: content, source, chunk_index, metadata

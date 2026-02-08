@@ -1,0 +1,2 @@
+# Put PDF, .txt, or .md files here for RAG ingest.
+# The notebook and API ingest from this folder into Redis.

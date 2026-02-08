@@ -1,0 +1,9 @@
+{
+    "dependencies": [
+        "."
+    ],
+    "graphs": {
+        "rag": "./src/clinxplain/rag/graph.py:graph"
+    },
+    "env": ".env"
+}

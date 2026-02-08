@@ -10,6 +10,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from langchain_core.tools import tool
+import os
 from langchain_openai import ChatOpenAI
 from langgraph.prebuilt import create_react_agent
 
@@ -129,9 +130,11 @@ def create_rag_agent(config: RAGConfig | None = None) -> Runnable:
         _make_reformulate_query_tool(),
     ]
 
+    _ollama_base = os.getenv("OLLAMA_LLM_BASE")
     llm = ChatOpenAI(
         model=cfg.llm_model,
         temperature=cfg.llm_temperature,
+        **({"base_url": _ollama_base} if _ollama_base else {}),
     )
 
     agent = create_react_agent(

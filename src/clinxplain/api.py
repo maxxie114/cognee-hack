@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import tempfile
 from pathlib import Path
@@ -208,10 +209,12 @@ async def websocket_chat(websocket: WebSocket) -> None:
                 for t in conversation_history
             ) + "\n\n"
         user_content = f"{history_block}Context:\n{context_str}\n\nQuestion: {message}\n\nAnswer:"
+        _ollama_base = os.getenv("OLLAMA_LLM_BASE")
         llm = ChatOpenAI(
             model=config.llm_model,
             temperature=config.llm_temperature,
             streaming=True,
+            **({"base_url": _ollama_base} if _ollama_base else {}),
         )
         messages = [SystemMessage(content=system), HumanMessage(content=user_content)]
         streamed_content: list[str] = []

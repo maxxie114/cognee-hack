@@ -275,7 +275,13 @@ class ContextManager:
     def __init__(self, db: RedisVLAdapter, short_term_memory: ShortTermMemory | None = None) -> None:
         self.db = db
         self.short_term_memory = short_term_memory
-        self.llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3)
+        _ollama_base = os.getenv("OLLAMA_LLM_BASE")
+        _llm_model = os.getenv("RAG_LLM_MODEL", "gpt-4o-mini")
+        self.llm = ChatOpenAI(
+            model=_llm_model,
+            temperature=0.3,
+            **({"base_url": _ollama_base} if _ollama_base else {}),
+        )
 
     async def synthesize_context(
         self,

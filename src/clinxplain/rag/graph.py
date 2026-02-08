@@ -10,6 +10,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableConfig
 from langchain_openai import ChatOpenAI
 from langgraph.graph import END, StateGraph
+import os
 from langgraph.graph.message import add_messages
 
 from .config import RAGConfig
@@ -75,9 +76,11 @@ def generate_node(state: RAGState, config: RunnableConfig) -> dict:
     ) or "No relevant context found."
 
     rag_config = RAGConfig.from_env()
+    _ollama_base = os.getenv("OLLAMA_LLM_BASE")
     llm = ChatOpenAI(
         model=rag_config.llm_model,
         temperature=rag_config.llm_temperature,
+        **({"base_url": _ollama_base} if _ollama_base else {}),
     )
 
     prompt = ChatPromptTemplate.from_messages([
